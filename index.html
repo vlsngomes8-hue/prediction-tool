@@ -1,31 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Manual Prediction Tool</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial; padding: 15px; background:#111; color:#fff }
-    input, button { padding:10px; margin:5px; width:100% }
-    button { background:#00c853; border:none; color:#000; font-weight:bold }
-    .box { background:#222; padding:10px; margin-top:10px }
-  </style>
+<meta charset="UTF-8">
+<title>Screenshot OCR Prediction Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+
+<style>
+body{
+  background:#0b0f14;
+  color:#fff;
+  font-family:system-ui,Roboto;
+  display:flex;
+  justify-content:center;
+  padding:15px;
+}
+.app{max-width:420px;width:100%}
+h2{text-align:center;margin-bottom:15px}
+.card{
+  background:#121826;
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:8px;
+}
+button{
+  background:#00e676;
+  color:#000;
+  font-weight:600;
+  cursor:pointer;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+td,th{
+  border:1px solid #333;
+  padding:6px;
+  font-size:13px;
+  text-align:center;
+}
+.output{line-height:1.6;font-size:14px}
+small{color:#9aa4b2}
+</style>
 </head>
+
 <body>
+<div class="app">
 
-<h2>Prediction Tool</h2>
+<h2>OCR Prediction Tool</h2>
 
-<div class="box">
-  <input id="period" placeholder="Enter starting period (once)">
-  <button onclick="setPeriod()">Set Period</button>
+<div class="card">
+  <input type="file" accept="image/*" onchange="loadImage(event)">
+  <small>Upload ONE screenshot at a time</small>
 </div>
 
-<div class="box">
-  <input id="number" placeholder="Enter result number">
-  <button onclick="addNumber()">Add Result</button>
+<div class="card" id="ocrStatus">Waiting for image…</div>
+
+<div class="card" id="review" style="display:none">
+  <b>Review & Edit (IMPORTANT)</b>
+  <table id="table">
+    <tr><th>Period</th><th>Number</th></tr>
+  </table>
+  <button onclick="confirmData()">Confirm & Save</button>
 </div>
 
-<div class="box" id="output">No data yet</div>
+<div class="card output" id="prediction">
+  No prediction yet
+</div>
 
-<script src="script.js"></script>
+</div>
+
+<script>
+let extracted = [];
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+function loadImage(e){
+  const file = e.target.files[0];
+  document.getElementById("ocrStatus").innerText = "Reading image…";
+
+  Tesseract.recognize(
+    file,
+    'eng',
+    { logger: m => console.log(m) }
+  ).then(({ data }) => {
+    parseText(data.text);
+  });
+}
+
+function parseText(text){
+  extracted = [];
+  let lines = text.split("\n");
+
+  lines.forEach(l=>{
+    let nums = l.match(/\d+/g);
+    if(nums && nums.length>=2){
+      let period = nums[0];
+      let number = nums[nums.length-1];
+      if(period.length >= 8 && number.length <= 2){
+        extracted.push({period,number});
+      }
+    }
+  });
+
+  if(extracted.length===0){
+    document.getElementById("ocrStatus").innerText =
+      "No data detected. Try clearer image.";
+    return;
+  }
+
+  showReview();
+}
+
+function showReview(){
+  let table = document.getElementById("table");
+  table.innerHTML = "<tr><th>Period</th><th>Number</th></tr>";
+
+  extracted.forEach((r,i)=>{
+    let row = table.insertRow();
+    row.insertCell(0).innerHTML =
+      `<input value="${r.period}" onchange="extracted[${i}].period=this.value">`;
+    row.insertCell(1).innerHTML =
+      `<input value="${r.number}" onchange="extracted[${i}].number=this.value">`;
+  });
+
+  document.getElementById("review").style.display="block";
+  document.getElementById("ocrStatus").innerText="Review data below";
+}
+
+function confirmData(){
+  extracted.forEach(r=>{
+    history.push(r);
+  });
+
+  localStorage.setItem("history",JSON.stringify(history));
+  extracted=[];
+  document.getElementById("review").style.display="none";
+  predict();
+}
+
+function predict(){
+  if(history.length<2){
+    document.getElementById("prediction").innerText="Need more data";
+    return;
+  }
+
+  let last = history[history.length-1].number;
+  let map={};
+
+  for(let i=0;i<history.length-1;i++){
+    if(history[i].number==last){
+      let next = history[i+1].number;
+      map[next]=(map[next]||0)+1;
+    }
+  }
+
+  let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+  document.getElementById("prediction").innerHTML =
+    `<b>Last:</b> ${last}<br>
+     <b>Strong:</b> ${sorted[0]?.[0]||"N/A"}<br>
+     <b>Backup:</b> ${sorted[1]?.[0]||"N/A"}`;
+}
+
+if(history.length>1) predict();
+</script>
+
 </body>
 </html>
