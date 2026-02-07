@@ -1,48 +1,49 @@
 let period = 10712;
 let history = [];
 let transitions = {};
-let lastPrediction = "-";
+let lastPredictions = [];
 
-function addResult() {
-  const input = document.getElementById("resultInput");
-  const result = input.value;
+function addResult(result) {
 
-  if (result === "") return;
-
-  // build transition data
+  // build transition map
   if (history.length > 0) {
     const prev = history[history.length - 1];
     if (!transitions[prev]) transitions[prev] = {};
     transitions[prev][result] = (transitions[prev][result] || 0) + 1;
   }
 
-  history.push(result);
-
-  // decide status
+  // status check
   let status = "LOSS";
-  if (lastPrediction === result) status = "NUMBER WIN";
+  if (lastPredictions.includes(String(result))) {
+    status = "NUMBER WIN";
+  }
 
   // add row
-  addRow(period, lastPrediction, result, status);
+  addRow(period, lastPredictions.join(","), result, status);
 
-  // calculate next prediction
-  let nextPrediction = "-";
-  if (transitions[result]) {
-    let max = 0;
-    for (let n in transitions[result]) {
-      if (transitions[result][n] > max) {
-        max = transitions[result][n];
-        nextPrediction = n;
-      }
+  history.push(String(result));
+
+  // calculate next 2 predictions (based on PREVIOUS number)
+  let preds = [];
+  if (history.length > 1) {
+    const base = history[history.length - 2];
+    if (transitions[base]) {
+      const sorted = Object.entries(transitions[base])
+        .sort((a, b) => b[1] - a[1])
+        .map(x => x[0]);
+
+      preds = sorted.slice(0, 2);
     }
   }
 
-  lastPrediction = nextPrediction;
-  document.getElementById("topPrediction").innerText =
-    nextPrediction === "-" ? "Waiting for data" : `NEXT → ${nextPrediction}`;
+  lastPredictions = preds;
+
+  document.getElementById("pred1").innerText =
+    preds[0] ? preds[0] : "WAITING";
+  document.getElementById("pred2").innerText =
+    preds[1] ? preds[1] : "WAITING";
 
   period++;
-  input.value = "";
 }
 
 function addRow(p, pred, res, stat) {
@@ -51,7 +52,7 @@ function addRow(p, pred, res, stat) {
 
   row.innerHTML = `
     <td>${p}</td>
-    <td>${pred}</td>
+    <td>${pred || "-"}</td>
     <td>${res}</td>
     <td class="${stat === "LOSS" ? "loss" : "win"}">${stat}</td>
   `;
