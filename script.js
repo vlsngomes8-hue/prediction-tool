@@ -3,6 +3,7 @@ let history = JSON.parse(localStorage.getItem("history")) || [];
 let period = parseInt(localStorage.getItem("period")) || 10001;
 let correctBS = parseInt(localStorage.getItem("correctBS")) || 0;
 let total = parseInt(localStorage.getItem("total")) || 0;
+let lastPrediction = localStorage.getItem("lastPrediction") || "WAITING";
 
 // ===== HELPERS =====
 function isBig(n) {
@@ -12,27 +13,39 @@ function isBig(n) {
 // ===== INITIAL RENDER =====
 renderAll();
 
-// ===== MAIN FUNCTION =====
+// ===== MAIN =====
 function addResult(num) {
-  history.push(num);
+  const actualType = isBig(num) ? "BIG" : "SMALL";
+
+  let status = "LOSS";
+  if (lastPrediction === actualType) {
+    status = "WIN";
+    correctBS++;
+  }
+
   total++;
 
-  const type = isBig(num) ? "BIG" : "SMALL";
+  history.push({
+    period,
+    num,
+    type: actualType,
+    status
+  });
 
-  // prediction based on last 5
+  // Prediction logic (last 5)
   let last = history.slice(-5);
-  let bigCount = last.filter(isBig).length;
+  let bigCount = last.filter(x => x.type === "BIG").length;
   let smallCount = last.length - bigCount;
+
   let prediction = bigCount >= smallCount ? "BIG" : "SMALL";
+  lastPrediction = prediction;
 
-  if (prediction === type) correctBS++;
-
-  // save data
+  // Save
   saveData();
 
-  // update UI
+  // UI
   updateStats(prediction);
-  addHistoryRow(period, num, type);
+  addHistoryRow(period, num, actualType, status);
 
   period++;
   localStorage.setItem("period", period);
@@ -43,15 +56,16 @@ function saveData() {
   localStorage.setItem("history", JSON.stringify(history));
   localStorage.setItem("correctBS", correctBS);
   localStorage.setItem("total", total);
+  localStorage.setItem("lastPrediction", lastPrediction);
 }
 
-// ===== UPDATE STATS =====
+// ===== UPDATE UI =====
 function updateStats(prediction) {
   let acc = total > 0 ? Math.round((correctBS / total) * 100) : 0;
 
   // strong numbers
   let freq = {};
-  history.forEach(n => freq[n] = (freq[n] || 0) + 1);
+  history.forEach(h => freq[h.num] = (freq[h.num] || 0) + 1);
   let sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
 
   document.getElementById("n1").innerText = sorted[0]?.[0] ?? "–";
@@ -63,11 +77,11 @@ function updateStats(prediction) {
   document.getElementById("bsAcc").innerText = acc + "%";
 
   document.getElementById("reason").innerText =
-    `Detected ${prediction} dominance from recent outcomes.`;
+    `Prediction based on recent BIG/SMALL dominance.`;
 }
 
-// ===== HISTORY UI =====
-function addHistoryRow(p, num, type) {
+// ===== HISTORY ROW =====
+function addHistoryRow(p, num, type, status) {
   const row = document.createElement("div");
   row.className = "history-row";
 
@@ -75,25 +89,21 @@ function addHistoryRow(p, num, type) {
     <span>${p}</span>
     <span>${num}</span>
     <span class="${type === "BIG" ? "big" : "small"}">${type}</span>
+    <span class="${status === "WIN" ? "win" : "loss"}">${status}</span>
   `;
 
   document.getElementById("historyList").prepend(row);
 }
 
-// ===== RENDER SAVED DATA =====
+// ===== LOAD HISTORY =====
 function renderAll() {
   document.getElementById("historyList").innerHTML = "";
 
-  history.forEach((num, index) => {
-    const type = isBig(num) ? "BIG" : "SMALL";
-    addHistoryRow(10001 + index, num, type);
+  history.forEach(h => {
+    addHistoryRow(h.period, h.num, h.type, h.status);
   });
 
-  if (history.length >= 2) {
-    let last = history.slice(-5);
-    let bigCount = last.filter(isBig).length;
-    let smallCount = last.length - bigCount;
-    let prediction = bigCount >= smallCount ? "BIG" : "SMALL";
-    updateStats(prediction);
+  if (history.length > 0) {
+    updateStats(lastPrediction);
   }
 }
