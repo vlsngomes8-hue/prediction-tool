@@ -1,61 +1,61 @@
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background: #ffe6f0;
   padding: 15px;
 }
 
-.card {
-  background: #ff5fa2;
+.header {
+  background: #ff4d94;
   color: white;
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
 }
 
-.card h2 {
-  margin: 0;
-}
-
-.active {
+.header p {
   font-size: 12px;
   opacity: 0.9;
 }
 
-.input-box {
-  margin: 15px 0;
+.input-area {
   display: flex;
   gap: 10px;
+  margin: 15px 0;
 }
 
 input {
   flex: 1;
   padding: 8px;
+  font-size: 14px;
 }
 
 button {
-  background: #ff5fa2;
+  background: #ff4d94;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 5px;
 }
 
 table {
   width: 100%;
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-}
-
-th, td {
-  padding: 8px;
-  text-align: center;
-  font-size: 14px;
 }
 
 th {
   background: #ffd1e6;
+  padding: 8px;
+  font-size: 13px;
+}
+
+td {
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
 }
 
 .win {
