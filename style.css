@@ -140,7 +140,7 @@ body {
 .history-header,
 .history-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   text-align: center;
   font-size: 13px;
 }
@@ -168,6 +168,16 @@ body {
 
 .small {
   color: #ff4d94;
+  font-weight: bold;
+}
+
+.win {
+  color: green;
+  font-weight: bold;
+}
+
+.loss {
+  color: red;
   font-weight: bold;
 }
 
