@@ -1,61 +1,45 @@
-let period = 10712;
 let history = [];
-let transitions = {};
-let lastPredictions = [];
+let correctBS = 0;
+let total = 0;
 
-function addResult(result) {
-
-  // build transition map
-  if (history.length > 0) {
-    const prev = history[history.length - 1];
-    if (!transitions[prev]) transitions[prev] = {};
-    transitions[prev][result] = (transitions[prev][result] || 0) + 1;
-  }
-
-  // status check
-  let status = "LOSS";
-  if (lastPredictions.includes(String(result))) {
-    status = "NUMBER WIN";
-  }
-
-  // add row
-  addRow(period, lastPredictions.join(","), result, status);
-
-  history.push(String(result));
-
-  // calculate next 2 predictions (based on PREVIOUS number)
-  let preds = [];
-  if (history.length > 1) {
-    const base = history[history.length - 2];
-    if (transitions[base]) {
-      const sorted = Object.entries(transitions[base])
-        .sort((a, b) => b[1] - a[1])
-        .map(x => x[0]);
-
-      preds = sorted.slice(0, 2);
-    }
-  }
-
-  lastPredictions = preds;
-
-  document.getElementById("pred1").innerText =
-    preds[0] ? preds[0] : "WAITING";
-  document.getElementById("pred2").innerText =
-    preds[1] ? preds[1] : "WAITING";
-
-  period++;
+function isBig(n) {
+  return n >= 5;
 }
 
-function addRow(p, pred, res, stat) {
-  const tbody = document.getElementById("tableBody");
-  const row = document.createElement("tr");
+function addResult(num) {
+  history.push(num);
+  total++;
 
-  row.innerHTML = `
-    <td>${p}</td>
-    <td>${pred || "-"}</td>
-    <td>${res}</td>
-    <td class="${stat === "LOSS" ? "loss" : "win"}">${stat}</td>
-  `;
+  if (history.length < 3) return;
 
-  tbody.prepend(row);
+  // BIG / SMALL trend
+  let last = history.slice(-5);
+  let bigCount = last.filter(isBig).length;
+  let smallCount = last.length - bigCount;
+
+  let prediction = bigCount >= smallCount ? "BIG" : "SMALL";
+
+  // accuracy
+  if ((prediction === "BIG" && isBig(num)) ||
+      (prediction === "SMALL" && !isBig(num))) {
+    correctBS++;
+  }
+
+  let acc = Math.round((correctBS / total) * 100);
+
+  // strong numbers
+  let freq = {};
+  history.forEach(n => freq[n] = (freq[n] || 0) + 1);
+  let sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+
+  document.getElementById("n1").innerText = sorted[0][0];
+  document.getElementById("n2").innerText = sorted[1]?.[0] ?? "–";
+
+  document.getElementById("bsPrediction").innerText = prediction;
+  document.getElementById("confidence").innerText = acc + "%";
+  document.getElementById("outAcc").innerText = acc + "%";
+  document.getElementById("bsAcc").innerText = acc + "%";
+
+  document.getElementById("reason").innerText =
+    `Detected ${bigCount > smallCount ? "BIG" : "SMALL"} dominance in last ${last.length} results.`;
 }
