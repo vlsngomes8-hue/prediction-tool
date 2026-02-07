@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>ChromaPredict</title>
-  <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <p>Deep Pattern Analysis Engine</p>
   </div>
 
-  <!-- Accuracy cards -->
+  <!-- Stats -->
   <div class="stats">
     <div class="stat-card">
       <span>Outcome Accuracy</span>
@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <!-- Prediction Card -->
+  <!-- Prediction -->
   <div class="prediction-card">
     <div class="row">
       <span class="label">Recommended Bet</span>
@@ -48,6 +48,19 @@
     <p class="reason" id="reason">
       Enter results to start pattern detection.
     </p>
+  </div>
+
+  <!-- History -->
+  <div class="history-card">
+    <h3>Result History</h3>
+
+    <div class="history-header">
+      <span>Period</span>
+      <span>Result</span>
+      <span>Type</span>
+    </div>
+
+    <div id="historyList" class="history-list"></div>
   </div>
 
   <!-- Number Pad -->
