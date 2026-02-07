@@ -4,37 +4,44 @@
   <meta charset="UTF-8">
   <title>ChromaPredict</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<div class="app">
+<div class="container">
 
-  <h1 class="logo">CHROMA<span>PREDICT</span></h1>
-  <p class="subtitle">DEEP PATTERN ANALYSIS</p>
+  <!-- Header -->
+  <div class="header">
+    <h1>CHROMA<span>PREDICT</span></h1>
+    <p>Deep Pattern Analysis Engine</p>
+  </div>
 
   <!-- Accuracy cards -->
   <div class="stats">
-    <div class="stat">
-      <p>OUTCOME ACCURACY</p>
+    <div class="stat-card">
+      <span>Outcome Accuracy</span>
       <h2 id="outAcc">0%</h2>
     </div>
-    <div class="stat green">
-      <p>BIG/SMALL ACCURACY</p>
+    <div class="stat-card">
+      <span>Big / Small Accuracy</span>
       <h2 id="bsAcc">0%</h2>
     </div>
   </div>
 
-  <!-- Prediction -->
-  <div class="card">
-    <p class="label">RECOMMENDED BET</p>
-    <h2 id="bsPrediction">WAITING</h2>
-    <p class="confidence">CONFIDENCE: <span id="confidence">0%</span></p>
+  <!-- Prediction Card -->
+  <div class="prediction-card">
+    <div class="row">
+      <span class="label">Recommended Bet</span>
+      <span class="confidence">Confidence: <b id="confidence">0%</b></span>
+    </div>
 
-    <div class="strong">
-      <p>STRONG NUMBERS</p>
-      <div class="nums">
-        <span id="n1">–</span>
-        <span id="n2">–</span>
+    <h2 id="bsPrediction">WAITING</h2>
+
+    <div class="strong-box">
+      <span>Strong Numbers</span>
+      <div class="numbers">
+        <div id="n1">–</div>
+        <div id="n2">–</div>
       </div>
     </div>
 
@@ -43,8 +50,8 @@
     </p>
   </div>
 
-  <!-- Buttons -->
-  <div class="buttons">
+  <!-- Number Pad -->
+  <div class="pad">
     <button onclick="addResult(0)">0</button>
     <button onclick="addResult(1)">1</button>
     <button onclick="addResult(2)">2</button>
