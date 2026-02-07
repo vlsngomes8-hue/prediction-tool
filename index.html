@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manual Prediction Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; padding: 15px; background:#111; color:#fff }
+    input, button { padding:10px; margin:5px; width:100% }
+    button { background:#00c853; border:none; color:#000; font-weight:bold }
+    .box { background:#222; padding:10px; margin-top:10px }
+  </style>
+</head>
+<body>
 
+<h2>Prediction Tool</h2>
+
+<div class="box">
+  <input id="period" placeholder="Enter starting period (once)">
+  <button onclick="setPeriod()">Set Period</button>
+</div>
+
+<div class="box">
+  <input id="number" placeholder="Enter result number">
+  <button onclick="addNumber()">Add Result</button>
+</div>
+
+<div class="box" id="output">No data yet</div>
+
+<script src="script.js"></script>
+</body>
+</html>
