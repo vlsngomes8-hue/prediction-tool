@@ -1,100 +1,161 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #fff3f7;
+* {
+  box-sizing: border-box;
 }
 
-.app {
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #f7f0ff, #ffe9f2);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
   padding: 16px;
 }
 
-.logo {
+/* Header */
+.header {
+  background: linear-gradient(135deg, #7b2ff7, #ff4d94);
+  color: white;
+  padding: 20px;
+  border-radius: 18px;
   text-align: center;
-  font-size: 32px;
-  color: #c44ccf;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-.logo span {
+.header h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
+
+.header span {
+  opacity: 0.9;
+}
+
+.header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.stat-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.stat-card span {
+  font-size: 12px;
+  color: #777;
+}
+
+.stat-card h2 {
+  margin: 6px 0 0;
+  font-size: 22px;
   color: #ff4d94;
 }
 
-.subtitle {
-  text-align: center;
-  color: #888;
-  margin-bottom: 20px;
+/* Prediction */
+.prediction-card {
+  background: white;
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.1);
 }
 
-.stats {
+.row {
   display: flex;
-  gap: 10px;
-}
-
-.stat {
-  flex: 1;
-  background: white;
-  padding: 14px;
-  border-radius: 14px;
-  text-align: center;
-}
-
-.stat.green h2 {
-  color: green;
-}
-
-.card {
-  background: white;
-  margin-top: 15px;
-  padding: 16px;
-  border-radius: 18px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .label {
-  color: #888;
   font-size: 12px;
-}
-
-.card h2 {
-  font-size: 30px;
-  margin: 10px 0;
-  color: #ff4d94;
+  color: #777;
 }
 
 .confidence {
-  font-size: 14px;
+  font-size: 12px;
+  color: #444;
 }
 
-.strong {
+.prediction-card h2 {
+  text-align: center;
+  margin: 14px 0;
+  font-size: 34px;
+  color: #ff4d94;
+}
+
+/* Strong numbers */
+.strong-box {
   margin-top: 10px;
 }
 
-.nums span {
-  display: inline-block;
-  background: #c44ccf;
+.strong-box span {
+  font-size: 12px;
+  color: #777;
+}
+
+.numbers {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.numbers div {
+  flex: 1;
+  background: linear-gradient(135deg, #7b2ff7, #ff4d94);
   color: white;
-  font-size: 22px;
-  padding: 8px 14px;
-  border-radius: 12px;
-  margin-right: 10px;
+  font-size: 26px;
+  text-align: center;
+  padding: 14px 0;
+  border-radius: 14px;
+  font-weight: bold;
 }
 
+/* Reason */
 .reason {
-  font-size: 14px;
-  margin-top: 10px;
+  margin-top: 12px;
+  font-size: 13px;
   color: #555;
+  line-height: 1.4;
 }
 
-.buttons {
+/* Number pad */
+.pad {
   margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
-.buttons button {
-  font-size: 24px;
-  padding: 14px;
-  border-radius: 14px;
+.pad button {
+  background: white;
   border: none;
-  background: #ff4d94;
-  color: white;
+  font-size: 22px;
+  padding: 14px 0;
+  border-radius: 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.pad button:active {
+  transform: scale(0.95);
 }
