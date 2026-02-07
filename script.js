@@ -1,4 +1,3 @@
-
 let period = 10712;
 let history = [];
 let transitions = {};
@@ -10,7 +9,7 @@ function addResult() {
 
   if (result === "") return;
 
-  // build transition map
+  // build transition data
   if (history.length > 0) {
     const prev = history[history.length - 1];
     if (!transitions[prev]) transitions[prev] = {};
@@ -19,27 +18,28 @@ function addResult() {
 
   history.push(result);
 
-  // generate prediction
-  let prediction = "-";
+  // decide status
+  let status = "LOSS";
+  if (lastPrediction === result) status = "NUMBER WIN";
+
+  // add row
+  addRow(period, lastPrediction, result, status);
+
+  // calculate next prediction
+  let nextPrediction = "-";
   if (transitions[result]) {
     let max = 0;
     for (let n in transitions[result]) {
       if (transitions[result][n] > max) {
         max = transitions[result][n];
-        prediction = n;
+        nextPrediction = n;
       }
     }
   }
 
-  // status logic
-  let status = "LOSS";
-  if (lastPrediction === result) status = "NUMBER WIN";
-
-  addRow(period, lastPrediction, result, status);
-
-  lastPrediction = prediction;
-  document.getElementById("predictionText").innerText =
-    prediction === "-" ? "Waiting for data" : `NEXT → ${prediction}`;
+  lastPrediction = nextPrediction;
+  document.getElementById("topPrediction").innerText =
+    nextPrediction === "-" ? "Waiting for data" : `NEXT → ${nextPrediction}`;
 
   period++;
   input.value = "";
@@ -51,7 +51,7 @@ function addRow(p, pred, res, stat) {
 
   row.innerHTML = `
     <td>${p}</td>
-    <td>${pred === "-" ? "-" : pred}</td>
+    <td>${pred}</td>
     <td>${res}</td>
     <td class="${stat === "LOSS" ? "loss" : "win"}">${stat}</td>
   `;
