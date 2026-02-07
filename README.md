@@ -1,19 +1,18 @@
 # prediction-tool
 
-A simple number sequence analysis tool.
+Mobile-friendly number transition prediction tool.
 
-## What it does
-- You manually enter result numbers
-- Period increases automatically
-- Tool checks which number most frequently comes AFTER the previous number
-- Shows prediction, result, and win/loss status
+## Features
+- Big 0–9 input buttons
+- Top 2 next-number predictions
+- Auto period increment
+- Win/Loss status
+- Works on GitHub Pages
 
-## How prediction works
-If history is:
-3 → 5 → 3 → 5 → 3
-
-Then:
-After 3 → 5 (most frequent)
+## Logic
+Prediction is based on:
+Most frequent number that appeared AFTER the previous result.
 
 ## Usage
-Open index.html in browser or deploy via GitHub Pages.
+Tap numbers to add results.
+Predictions update automatically.
