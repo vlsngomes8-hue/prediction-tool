@@ -2,44 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Prediction Tool</title>
+  <title>ChromaPredict</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="header">
-  <h1>PREDICTION</h1>
-  <div class="predictions">
-    <div id="pred1">WAITING</div>
-    <div id="pred2">WAITING</div>
+<div class="app">
+
+  <h1 class="logo">CHROMA<span>PREDICT</span></h1>
+  <p class="subtitle">DEEP PATTERN ANALYSIS</p>
+
+  <!-- Accuracy cards -->
+  <div class="stats">
+    <div class="stat">
+      <p>OUTCOME ACCURACY</p>
+      <h2 id="outAcc">0%</h2>
+    </div>
+    <div class="stat green">
+      <p>BIG/SMALL ACCURACY</p>
+      <h2 id="bsAcc">0%</h2>
+    </div>
   </div>
-  <p>Advanced Analysis System Active</p>
-</div>
 
-<div class="buttons">
-  <button onclick="addResult(0)">0</button>
-  <button onclick="addResult(1)">1</button>
-  <button onclick="addResult(2)">2</button>
-  <button onclick="addResult(3)">3</button>
-  <button onclick="addResult(4)">4</button>
-  <button onclick="addResult(5)">5</button>
-  <button onclick="addResult(6)">6</button>
-  <button onclick="addResult(7)">7</button>
-  <button onclick="addResult(8)">8</button>
-  <button onclick="addResult(9)">9</button>
-</div>
+  <!-- Prediction -->
+  <div class="card">
+    <p class="label">RECOMMENDED BET</p>
+    <h2 id="bsPrediction">WAITING</h2>
+    <p class="confidence">CONFIDENCE: <span id="confidence">0%</span></p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Period</th>
-      <th>Prediction</th>
-      <th>Result</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody id="tableBody"></tbody>
-</table>
+    <div class="strong">
+      <p>STRONG NUMBERS</p>
+      <div class="nums">
+        <span id="n1">–</span>
+        <span id="n2">–</span>
+      </div>
+    </div>
+
+    <p class="reason" id="reason">
+      Enter results to start pattern detection.
+    </p>
+  </div>
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <button onclick="addResult(0)">0</button>
+    <button onclick="addResult(1)">1</button>
+    <button onclick="addResult(2)">2</button>
+    <button onclick="addResult(3)">3</button>
+    <button onclick="addResult(4)">4</button>
+    <button onclick="addResult(5)">5</button>
+    <button onclick="addResult(6)">6</button>
+    <button onclick="addResult(7)">7</button>
+    <button onclick="addResult(8)">8</button>
+    <button onclick="addResult(9)">9</button>
+  </div>
+
+</div>
 
 <script src="script.js"></script>
 </body>
